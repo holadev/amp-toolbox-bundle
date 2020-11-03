@@ -1,0 +1,57 @@
+{
+  "name": "holadev/amp-toolbox-bundle",
+  "type": "symfony-bundle",
+  "description": "Symfony integration for Amp-toolbox-php",
+  "keywords": [
+    "amp"
+  ],
+  "homepage": "https://github.com/holadev/amp-toolbox-bundle",
+  "license": "",
+  "authors": [
+    {
+      "name": "Mariano Biencinto",
+      "email": "mariano.biencinto@hola.com"
+    },
+    {
+      "name": "Marco Ferrari",
+      "email": "marco.ferrari@hola.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ampproject/amp-toolbox": "9999999-dev",
+    "symfony/config": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/dependency-injection": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/event-dispatcher": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/http-kernel": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/options-resolver": "^3.4.34 || ^4.2.12 || ^5.0"
+  },
+  "require-dev": {
+    "matthiasnoback/symfony-dependency-injection-test": "^4.0",
+    "symfony/browser-kit": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/framework-bundle": "^3.4.34 || ^4.2.12 || ^5.0",
+    "symfony/phpunit-bridge": "^3.4.34 || ^4.2.12 || ^5.0"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Hola\\AmpToolboxBundle\\": ""
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Hola\\AmpToolboxBundle\\Tests\\": "/Tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "vendor/bin/simple-phpunit",
+    "test-ci": "vendor/bin/simple-phpunit --coverage-text --coverage-clover=build/coverage.xml"
+  }
+}
