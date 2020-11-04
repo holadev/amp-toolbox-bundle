@@ -12,7 +12,11 @@ class AmpToolboxExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
+
+        $config = null;
+        if (null !== $configuration) {
+            $config = $this->processConfiguration($configuration, $configs);
+        }
 
         $container->setParameter('amp_toolbox', $config);
 
