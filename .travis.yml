@@ -53,3 +53,4 @@ script:
   # simple-phpunit is the PHPUnit wrapper provided by the PHPUnit Bridge component and
   # it helps with testing legacy code and deprecations (composer require symfony/phpunit-bridge)
   - ./vendor/bin/simple-phpunit $PHPUNIT_FLAGS
+
