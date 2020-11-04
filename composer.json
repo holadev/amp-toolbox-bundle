@@ -6,7 +6,7 @@
     "amp"
   ],
   "homepage": "https://github.com/holadev/amp-toolbox-bundle",
-  "license": "",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Mariano Biencinto",
@@ -19,7 +19,7 @@
   ],
   "require": {
     "php": "^7.2",
-    "ampproject/amp-toolbox": "9999999-dev",
+    "ampproject/amp-toolbox": "dev-main",
     "symfony/config": "^3.4.34 || ^4.2.12 || ^5.0",
     "symfony/dependency-injection": "^3.4.34 || ^4.2.12 || ^5.0",
     "symfony/event-dispatcher": "^3.4.34 || ^4.2.12 || ^5.0",
