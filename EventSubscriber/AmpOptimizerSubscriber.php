@@ -11,13 +11,20 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class AmpOptimizerSubscriber implements EventSubscriberInterface
 {
-    /** @var LoggerInterface */
+
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
-    /** @var TransformationEngine */
+    /**
+     * @var TransformationEngine
+     */
     private $transformationEngine;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $config;
 
     /**
@@ -45,6 +52,7 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
 
     /**
      * @param ResponseEvent $event
+     * @return void
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
