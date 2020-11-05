@@ -9,6 +9,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Listen response event and optimize html
+ * Class AmpOptimizerSubscriber
+ * @package Hola\AmpToolboxBundle\EventSubscriber
+ */
 class AmpOptimizerSubscriber implements EventSubscriberInterface
 {
 

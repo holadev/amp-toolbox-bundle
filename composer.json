@@ -20,20 +20,20 @@
   "require": {
     "php": "^7.2",
     "ampproject/amp-toolbox": "dev-main",
-    "symfony/config": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/dependency-injection": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/event-dispatcher": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/http-kernel": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/options-resolver": "^3.4.34 || ^4.2.12 || ^5.0"
+    "symfony/config": "^4.2.12 || ^5.0",
+    "symfony/dependency-injection": "^4.2.12 || ^5.0",
+    "symfony/event-dispatcher": "^4.2.12 || ^5.0",
+    "symfony/http-kernel": "^4.2.12 || ^5.0",
+    "symfony/options-resolver": "^4.2.12 || ^5.0"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.3",
     "doctrine/annotations": "^1.11",
     "matthiasnoback/symfony-dependency-injection-test": "^4.0",
     "phpspec/prophecy": "^1.12",
-    "symfony/browser-kit": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/framework-bundle": "^3.4.34 || ^4.2.12 || ^5.0",
-    "symfony/phpunit-bridge": "^3.4.34 || ^4.2.12 || ^5.0"
+    "symfony/browser-kit": "^4.2.12 || ^5.0",
+    "symfony/framework-bundle": "^4.2.12 || ^5.0",
+    "symfony/phpunit-bridge": "^4.2.12 || ^5.0"
   },
   "config": {
     "sort-packages": true
