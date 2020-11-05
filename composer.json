@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "ampproject/amp-toolbox": "dev-main",
     "symfony/config": "^3.4.34 || ^4.2.12 || ^5.0",
     "symfony/dependency-injection": "^3.4.34 || ^4.2.12 || ^5.0",
