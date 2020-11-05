@@ -104,9 +104,9 @@ build:
     coverage:
       tests:
         override:
-          - command: ./run-my-tests
+          - command: ./vendor/bin/simple-phpunit --coverage-clover coverage.xml
             coverage:
-              file: target/coverage.xml
+              file: coverage.xml
               format: clover
     analysis:
       tests:
