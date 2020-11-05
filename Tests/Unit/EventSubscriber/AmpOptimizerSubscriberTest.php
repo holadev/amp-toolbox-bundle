@@ -84,8 +84,6 @@ class AmpOptimizerSubscriberTest extends TestCase
         $response->setContent(null)->shouldBeCalled();
         $response = $response->reveal();
 
-
-        /** @var ResponseEvent $event */
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
         $event->getResponse()->shouldBeCalled()->willReturn($response);;
@@ -97,7 +95,6 @@ class AmpOptimizerSubscriberTest extends TestCase
      */
     private function getEventNotMasterRequestMocked(): ResponseEvent
     {
-        /** @var ResponseEvent $event */
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(false);
         $event->getResponse()->shouldNotBeCalled();
