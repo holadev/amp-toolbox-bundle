@@ -110,8 +110,6 @@ build:
             command: phpcs-run
             use_website_config: true
           - php-scrutinizer-run
-          - command: ./vendor/bin/simple-phpunit --check-version
-
 
 coding_style:
   php:
