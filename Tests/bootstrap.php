@@ -6,3 +6,5 @@ if (!file_exists($file)) {
 }
 
 $autoload = require $file;
+
+DG\BypassFinals::enable();
