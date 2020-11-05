@@ -7,6 +7,7 @@ use AmpProject\Optimizer\TransformationEngine;
 use Psr\Log\LoggerInterface;
 use Sunra\PhpSimple\HtmlDomParser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -66,19 +67,38 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $response = $event->getResponse();
-        $content = $response->getContent();
-
-        $dom = HtmlDomParser::str_get_html($content);
-        $htmlElementAttrs = $dom->find('html', 0)->getAllAttributes();
-        if (empty(array_intersect(['⚡', 'amp'], array_keys($htmlElementAttrs)))) {
+        if (!$this->isAmpHtml($event->getResponse())) {
             return;
         }
 
         $errorCollection = new ErrorCollection();
 
-        $optimizedHtml = $this->transformationEngine->optimizeHtml($content, $errorCollection);
+        $optimizedHtml = $this->transformationEngine->optimizeHtml(
+            $event->getResponse()->getContent(),
+            $errorCollection
+        );
 
-        $response->setContent($optimizedHtml);
+        $event->getResponse()->setContent($optimizedHtml);
+    }
+
+    /**
+     * @param Response $response
+     * @return bool
+     */
+    private function isAmpHtml(Response $response): bool
+    {
+        $contentType = $response->headers->get('Content-type');
+        if (strpos($contentType, 'text/html') === false) {
+            return false;
+        }
+
+        $content = $response->getContent();
+        $dom = HtmlDomParser::str_get_html($content);
+        $htmlElementAttrs = $dom->find('html', 0)->getAllAttributes();
+        if (empty(array_intersect(['⚡', 'amp'], array_keys($htmlElementAttrs)))) {
+            return false;
+        }
+
+        return true;
     }
 }

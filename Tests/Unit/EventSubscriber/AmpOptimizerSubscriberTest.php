@@ -9,6 +9,7 @@ use Hola\AmpToolboxBundle\EventSubscriber\AmpOptimizerSubscriber;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -37,7 +38,10 @@ class AmpOptimizerSubscriberTest extends TestCase
     public function testNotAmpRequest()
     {
         $instance = $this->getInstance(false);
-        $event = $this->getEventNotAmpRequestMocked();
+        $event = $this->getEventNotAmpRequestMocked('text/html');
+        $instance->onKernelResponse($event);
+
+        $event = $this->getEventNotAmpRequestMocked('image/jpeg');
         $instance->onKernelResponse($event);
     }
 
@@ -85,9 +89,13 @@ class AmpOptimizerSubscriberTest extends TestCase
      */
     private function getEventMasterRequestMocked(): ResponseEvent
     {
+        $headers = $this->prophesize(ParameterBag::class);
+        $headers->get(Argument::exact('Content-type'))->willReturn('text/html');
+
         $response = $this->prophesize(Response::class);
         $response->getContent()->shouldBeCalled()->willReturn('<html ⚡></html>');
         $response->setContent(null)->shouldBeCalled();
+        $response->headers = $headers;
         $response = $response->reveal();
 
         $event = $this->prophesize(ResponseEvent::class);
@@ -97,12 +105,23 @@ class AmpOptimizerSubscriberTest extends TestCase
     }
 
     /**
+     * @param string $contentType
      * @return ResponseEvent
      */
-    private function getEventNotAmpRequestMocked(): ResponseEvent
+    private function getEventNotAmpRequestMocked($contentType = 'text/html'): ResponseEvent
     {
+        $headers = $this->prophesize(ParameterBag::class);
+        $headers->get(Argument::exact('Content-type'))->willReturn($contentType);
+
         $response = $this->prophesize(Response::class);
-        $response->getContent()->shouldBeCalled()->willReturn('<html></html>');
+        if ($contentType === 'text/html') {
+            $response->getContent()->shouldBeCalled()->willReturn('<html></html>');
+        }
+        if ($contentType === 'image/jpeg') {
+            $response->getContent()->shouldNotBeCalled();
+        }
+
+        $response->headers = $headers;
         $response = $response->reveal();
 
         $event = $this->prophesize(ResponseEvent::class);
