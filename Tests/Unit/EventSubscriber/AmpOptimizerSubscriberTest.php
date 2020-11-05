@@ -34,6 +34,12 @@ class AmpOptimizerSubscriberTest extends TestCase
         $instance->onKernelResponse($event);
     }
 
+    public function testNotAmpRequest()
+    {
+        $instance = $this->getInstance(false);
+        $event = $this->getEventNotAmpRequestMocked();
+        $instance->onKernelResponse($event);
+    }
 
     public function testTransformRequest()
     {
@@ -80,8 +86,23 @@ class AmpOptimizerSubscriberTest extends TestCase
     private function getEventMasterRequestMocked(): ResponseEvent
     {
         $response = $this->prophesize(Response::class);
-        $response->getContent()->shouldBeCalled()->willReturn('html');
+        $response->getContent()->shouldBeCalled()->willReturn('<html ⚡></html>');
         $response->setContent(null)->shouldBeCalled();
+        $response = $response->reveal();
+
+        $event = $this->prophesize(ResponseEvent::class);
+        $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
+        $event->getResponse()->shouldBeCalled()->willReturn($response);
+        return $event->reveal();
+    }
+
+    /**
+     * @return ResponseEvent
+     */
+    private function getEventNotAmpRequestMocked(): ResponseEvent
+    {
+        $response = $this->prophesize(Response::class);
+        $response->getContent()->shouldBeCalled()->willReturn('<html></html>');
         $response = $response->reveal();
 
         $event = $this->prophesize(ResponseEvent::class);

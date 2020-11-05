@@ -5,6 +5,7 @@ namespace Hola\AmpToolboxBundle\EventSubscriber;
 use AmpProject\Optimizer\ErrorCollection;
 use AmpProject\Optimizer\TransformationEngine;
 use Psr\Log\LoggerInterface;
+use Sunra\PhpSimple\HtmlDomParser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -66,9 +67,17 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
+        $content = $response->getContent();
+
+        $dom = HtmlDomParser::str_get_html($content);
+        $htmlElementAttrs = $dom->find('html', 0)->getAllAttributes();
+        if (empty(array_intersect(['⚡', 'amp'], array_keys($htmlElementAttrs)))) {
+            return;
+        }
+
         $errorCollection = new ErrorCollection();
 
-        $optimizedHtml = $this->transformationEngine->optimizeHtml($response->getContent(), $errorCollection);
+        $optimizedHtml = $this->transformationEngine->optimizeHtml($content, $errorCollection);
 
         $response->setContent($optimizedHtml);
     }
