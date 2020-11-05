@@ -101,12 +101,10 @@ checks:
 build:
   nodes:
     tests: true
-    coverage:
+    analysis:
       tests:
         before:
           - command: ./vendor/bin/simple-phpunit --check-version
-    analysis:
-      tests:
         override:
           -
             command: phpcs-run
