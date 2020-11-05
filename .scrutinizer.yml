@@ -101,6 +101,13 @@ checks:
 build:
   nodes:
     tests: true
+    coverage:
+      tests:
+        override:
+          - command: ./run-my-tests
+            coverage:
+              file: target/coverage.xml
+              format: clover
     analysis:
       tests:
         before:
