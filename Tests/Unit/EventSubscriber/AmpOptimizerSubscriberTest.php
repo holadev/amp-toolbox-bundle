@@ -79,7 +79,6 @@ class AmpOptimizerSubscriberTest extends TestCase
      */
     private function getEventMasterRequestMocked(): ResponseEvent
     {
-        /** @var Response $response */
         $response = $this->prophesize(Response::class);
         $response->getContent()->shouldBeCalled()->willReturn('html');
         $response->setContent(null)->shouldBeCalled();
