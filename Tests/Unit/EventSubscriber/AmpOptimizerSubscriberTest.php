@@ -86,7 +86,7 @@ class AmpOptimizerSubscriberTest extends TestCase
 
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
-        $event->getResponse()->shouldBeCalled()->willReturn($response);;
+        $event->getResponse()->shouldBeCalled()->willReturn($response);
         return $event->reveal();
     }
 
