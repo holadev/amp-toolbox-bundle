@@ -100,9 +100,11 @@ checks:
     argument_type_checks: true
 build:
   nodes:
-    tests:
-      before:
-        - command: ./vendor/bin/simple-phpunit --check-version
+    tests: true
+    coverage:
+      tests:
+        before:
+          - command: ./vendor/bin/simple-phpunit --check-version
     analysis:
       tests:
         override:
