@@ -13,6 +13,10 @@ class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
+                ->booleanNode('transform_enabled')->defaultFalse()
+            ->end()
+            ->end()
+            ->children()
                 ->arrayNode('error')
                     ->children()
                         ->booleanNode('log_enabled')->end()
