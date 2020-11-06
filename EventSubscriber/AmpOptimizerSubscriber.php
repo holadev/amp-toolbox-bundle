@@ -63,7 +63,8 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
      */
     public function onKernelResponse(ResponseEvent $event): void
     {
-        if (false === $this->config['transform_enabled']) {
+        if (!array_key_exists('transform_enabled', $this->config) ||
+            false === $this->config['transform_enabled']) {
             return;
         }
 
