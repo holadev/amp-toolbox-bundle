@@ -54,10 +54,9 @@ class AmpOptimizerSubscriberTest extends TestCase
 
     /**
      * @param bool $transform
-     * @param array $config
      * @return AmpOptimizerSubscriber
      */
-    private function getInstance($transform = true, $config = []): AmpOptimizerSubscriber
+    private function getInstance($transform = true): AmpOptimizerSubscriber
     {
         $logger = $this->prophesize(LoggerInterface::class);
 
@@ -80,7 +79,7 @@ class AmpOptimizerSubscriberTest extends TestCase
         return new AmpOptimizerSubscriber(
             $logger->reveal(),
             $transformationEngine->reveal(),
-            $config
+            ['transform_enabled' => true]
         );
     }
 
