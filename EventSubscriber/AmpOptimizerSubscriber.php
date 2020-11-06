@@ -35,6 +35,11 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
     private $config;
 
     /**
+     * @var ErrorCollection
+     */
+    private $errorCollection;
+
+    /**
      * AmpOptimizerSubscriber constructor.
      * @param LoggerInterface $logger
      * @param TransformationEngine $transformationEngine
@@ -45,6 +50,7 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
         $this->config = $config;
         $this->logger = $logger;
         $this->transformationEngine = $transformationEngine;
+        $this->errorCollection = new ErrorCollection();
     }
 
     /**
@@ -76,12 +82,12 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $errorCollection = new ErrorCollection();
-
         $optimizedHtml = $this->transformationEngine->optimizeHtml(
             $event->getResponse()->getContent(),
-            $errorCollection
+            $this->errorCollection
         );
+
+        $this->handleErrors();
 
         $event->getResponse()->setContent($optimizedHtml);
     }
@@ -105,5 +111,18 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
         }
 
         return true;
+    }
+
+    private function handleErrors(): void
+    {
+        if ($this->errorCollection->count() > 0) {
+            foreach ($this->errorCollection as $error) {
+                $this->logger->error(sprintf(
+                    "AMP-Optimizer Error code: %s\nError Message: %s\n",
+                    $error->getCode(),
+                    $error->getMessage()
+                ));
+            }
+        }
     }
 }

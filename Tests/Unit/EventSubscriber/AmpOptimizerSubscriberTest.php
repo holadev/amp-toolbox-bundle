@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use AmpProject\Optimizer\Error\UnknownError;
 
 class AmpOptimizerSubscriberTest extends TestCase
 {
@@ -67,7 +68,9 @@ class AmpOptimizerSubscriberTest extends TestCase
     private function getInstance($transform = true, $config = ['transform_enabled' => true]): AmpOptimizerSubscriber
     {
         $logger = $this->prophesize(LoggerInterface::class);
-
+        if($transform === true && $config === ['transform_enabled' => true]) {
+            $logger->error(Argument::any())->shouldBeCalled();
+        }
         $transformationEngine = $this->prophesize(TransformationEngine::class);
 
         if ($transform) {
@@ -84,11 +87,20 @@ class AmpOptimizerSubscriberTest extends TestCase
             )->shouldNotBeCalled();
         }
 
-        return new AmpOptimizerSubscriber(
+        $instance = new AmpOptimizerSubscriber(
             $logger->reveal(),
             $transformationEngine->reveal(),
             $config
         );
+
+        $reflection = new \ReflectionClass($instance);
+        $property = $reflection->getProperty('errorCollection');
+        $property->setAccessible(true);
+        $errorCollection = new ErrorCollection();
+        $errorCollection->add(new UnknownError('example error message'));
+        $property->setValue($instance, $errorCollection);
+
+        return $instance;
     }
 
     /**
