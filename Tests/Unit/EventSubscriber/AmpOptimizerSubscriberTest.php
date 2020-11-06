@@ -52,11 +52,19 @@ class AmpOptimizerSubscriberTest extends TestCase
         $instance->onKernelResponse($event);
     }
 
+    public function testTransformDisabledRequest()
+    {
+        $instance = $this->getInstance(false, []);
+        $event = $this->getEventMasterRequestTransformDisabledMocked();
+        $instance->onKernelResponse($event);
+    }
+
     /**
      * @param bool $transform
+     * @param array $config
      * @return AmpOptimizerSubscriber
      */
-    private function getInstance($transform = true): AmpOptimizerSubscriber
+    private function getInstance($transform = true, $config = ['transform_enabled' => true]): AmpOptimizerSubscriber
     {
         $logger = $this->prophesize(LoggerInterface::class);
 
@@ -79,7 +87,7 @@ class AmpOptimizerSubscriberTest extends TestCase
         return new AmpOptimizerSubscriber(
             $logger->reveal(),
             $transformationEngine->reveal(),
-            ['transform_enabled' => true]
+            $config
         );
     }
 
@@ -100,6 +108,22 @@ class AmpOptimizerSubscriberTest extends TestCase
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
         $event->getResponse()->shouldBeCalled()->willReturn($response);
+        return $event->reveal();
+    }
+
+    /**
+     * @return ResponseEvent
+     */
+    private function getEventMasterRequestTransformDisabledMocked(): ResponseEvent
+    {
+        $response = $this->prophesize(Response::class);
+        $response->getContent()->shouldNotBeCalled();
+        $response->setContent(null)->shouldNotBeCalled();
+        $response = $response->reveal();
+
+        $event = $this->prophesize(ResponseEvent::class);
+        $event->isMasterRequest()->shouldNotBeCalled()->willReturn(true);
+        $event->getResponse()->shouldNotBeCalled()->willReturn($response);
         return $event->reveal();
     }
 
