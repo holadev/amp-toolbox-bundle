@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Unit\EventSubscriber;
+namespace Hola\AmpToolboxBundle\Tests\Unit\EventSubscriber;
 
 use AmpProject\Optimizer\Error\UnknownError;
 use AmpProject\Optimizer\ErrorCollection;
