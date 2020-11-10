@@ -15,6 +15,15 @@ To install the bundle with Symfony Flex, use the recipe:
 $ composer require holadev/amp-toolbox-bundle
 ```
 
+Config file is needed to run this project. Must be contains a minimal config to enable:
+
+```
+# app/config/amp_toolbox.yaml
+
+amp_toolbox:
+  transform_enabled: true
+```
+
 ## Testing
 
 ``` bash
