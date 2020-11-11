@@ -19,7 +19,7 @@
   ],
   "require": {
     "php": "^7.2",
-    "ampproject/amp-toolbox": "dev-main",
+    "ampproject/amp-toolbox": "^0.1",
     "sunra/php-simple-html-dom-parser": "^1.5",
     "symfony/config": "^4.4.0 || ^5.0",
     "symfony/dependency-injection": "^4.4.0 || ^5.0",
