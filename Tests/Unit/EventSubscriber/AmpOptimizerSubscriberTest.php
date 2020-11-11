@@ -266,4 +266,46 @@ class AmpOptimizerSubscriberTest extends TestCase
         $event->getResponse()->shouldBeCalled()->willReturn($response);
         return $event->reveal();
     }
+
+    /**
+     * Test disabled by property
+     */
+    public function testDisabledByProperty()
+    {
+        $instance = $this->getInstanceDisabledByProperty();
+        $instance->setEnabled(false);
+        $event = $this->getEventDisabledByPropertyMocked();
+        $instance->onKernelResponse($event);
+    }
+
+    /**
+     * Provide instance to test with disabled by property and test calls
+     * @return AmpOptimizerSubscriber
+     */
+    private function getInstanceDisabledByProperty(): AmpOptimizerSubscriber
+    {
+        $logger = $this->prophesize(LoggerInterface::class);
+
+        $transformationEngine = $this->prophesize(TransformationEngine::class);
+        $transformationEngine->optimizeHtml(Argument::type('string'), Argument::type(ErrorCollection::class))
+            ->shouldNotBeCalled();
+
+        return new AmpOptimizerSubscriber(
+            $logger->reveal(),
+            $transformationEngine->reveal(),
+            ['transform_enabled' => true]
+        );
+    }
+
+    /**
+     * Provide response event to test with disabled by property and test calls
+     * @return ResponseEvent
+     */
+    private function getEventDisabledByPropertyMocked(): ResponseEvent
+    {
+        $event = $this->prophesize(ResponseEvent::class);
+        $event->isMasterRequest()->shouldNotBeCalled();
+        $event->getResponse()->shouldNotBeCalled();
+        return $event->reveal();
+    }
 }

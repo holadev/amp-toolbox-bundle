@@ -24,6 +24,19 @@ amp_toolbox:
   transform_enabled: true
 ```
 
+Alternatively, the property of activating the transformer can be defined through the class itself via autowiring.
+This property override config value of `transform_enabled` 
+```php
+# src/ExampleController.php
+
+public function index(
+        AmpOptimizerSubscriber $ampOptimizerSubscriber
+    ): array {
+        $ampOptimizerSubscriber->setEnabled(false);
+    // controller code...
+}
+```
+
 ## Testing
 
 ``` bash

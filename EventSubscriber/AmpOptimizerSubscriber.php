@@ -125,4 +125,12 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
             }
         }
     }
+
+    /**
+     * @param bool $enabled
+     */
+    public function setEnabled(bool $enabled): void
+    {
+        $this->config['transform_enabled'] = $enabled;
+    }
 }
