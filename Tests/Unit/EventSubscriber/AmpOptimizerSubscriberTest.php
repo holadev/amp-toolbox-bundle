@@ -12,6 +12,7 @@ use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -80,11 +81,20 @@ class AmpOptimizerSubscriberTest extends TestCase
     public function testNotAmpRequest()
     {
         $instance = $this->getInstanceNotAmpRequest();
+
+        $event = $this->getEventNotAmpRequestMocked('text/html', '', '/segment/image.webp');
+        $instance->onKernelResponse($event);
+
         $event = $this->getEventNotAmpRequestMocked('image/jpeg');
         $instance->onKernelResponse($event);
 
         $event = $this->getEventNotAmpRequestMocked('text/html', '<html></html>');
         $instance->onKernelResponse($event);
+
+        $event = $this->getEventNotAmpRequestMocked('text/html', '');
+        $instance->onKernelResponse($event);
+
+
     }
 
     /**
@@ -110,15 +120,20 @@ class AmpOptimizerSubscriberTest extends TestCase
      * Provide response event to test with not html amp request and test calls
      * @param string $contentType
      * @param string $content
+     * @param string $uri
      * @return ResponseEvent
      */
-    private function getEventNotAmpRequestMocked($contentType = 'text/html', $content = '<html ⚡></html>'): ResponseEvent
+    private function getEventNotAmpRequestMocked(
+        $contentType = 'text/html',
+        $content = '<html ⚡></html>',
+        $uri = '/segment/doc'
+    ): ResponseEvent
     {
         $headers = $this->prophesize(ParameterBag::class);
         $headers->get(Argument::exact('Content-type'))->willReturn($contentType);
 
         $response = $this->prophesize(Response::class);
-        if ($contentType === 'text/html') {
+        if ($contentType === 'text/html' && $uri === '/segment/doc') {
             $response->getContent()->shouldBeCalled()->willReturn($content);
         }
         if ($contentType === 'image/jpeg') {
@@ -128,9 +143,14 @@ class AmpOptimizerSubscriberTest extends TestCase
         $response->headers = $headers;
         $response = $response->reveal();
 
+        $request = $this->prophesize(Request::class);
+        $request->getUri()->willReturn($uri);
+        $request = $request->reveal();
+
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
         $event->getResponse()->shouldBeCalled()->willReturn($response);
+        $event->getRequest()->shouldBeCalled()->willReturn($request);
         return $event->reveal();
     }
 
@@ -248,9 +268,10 @@ class AmpOptimizerSubscriberTest extends TestCase
 
     /**
      * Provide response event to test normal operation log and test calls
+     * @param string $uri
      * @return ResponseEvent
      */
-    private function getEventMasterRequestMocked(): ResponseEvent
+    private function getEventMasterRequestMocked($uri = '/segment/doc'): ResponseEvent
     {
         $headers = $this->prophesize(ParameterBag::class);
         $headers->get(Argument::exact('Content-type'))->willReturn('text/html');
@@ -261,9 +282,14 @@ class AmpOptimizerSubscriberTest extends TestCase
         $response->headers = $headers;
         $response = $response->reveal();
 
+        $request = $this->prophesize(Request::class);
+        $request->getUri()->willReturn($uri);
+        $request = $request->reveal();
+
         $event = $this->prophesize(ResponseEvent::class);
         $event->isMasterRequest()->shouldBeCalled()->willReturn(true);
         $event->getResponse()->shouldBeCalled()->willReturn($response);
+        $event->getRequest()->shouldBeCalled()->willReturn($request);
         return $event->reveal();
     }
 
