@@ -118,7 +118,12 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        $htmlElementAttrs = $dom->find('html', 0)->getAllAttributes();
+        $htmlElement = $dom->find('html', 0);
+        if (null === $htmlElement) {
+            return false;
+        }
+
+        $htmlElementAttrs = $htmlElement->getAllAttributes();
         if (empty(array_intersect(['⚡', 'amp'], array_keys($htmlElementAttrs)))) {
             return false;
         }
