@@ -93,8 +93,6 @@ class AmpOptimizerSubscriberTest extends TestCase
 
         $event = $this->getEventNotAmpRequestMocked('text/html', '');
         $instance->onKernelResponse($event);
-
-
     }
 
     /**
@@ -127,8 +125,7 @@ class AmpOptimizerSubscriberTest extends TestCase
         $contentType = 'text/html',
         $content = '<html ⚡></html>',
         $uri = '/segment/doc'
-    ): ResponseEvent
-    {
+    ): ResponseEvent {
         $headers = $this->prophesize(ParameterBag::class);
         $headers->get(Argument::exact('Content-type'))->willReturn($contentType);
 
