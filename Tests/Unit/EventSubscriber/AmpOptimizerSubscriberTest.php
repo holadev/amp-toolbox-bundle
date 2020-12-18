@@ -91,6 +91,9 @@ class AmpOptimizerSubscriberTest extends TestCase
         $event = $this->getEventNotAmpRequestMocked('text/html', '<html></html>');
         $instance->onKernelResponse($event);
 
+        $event = $this->getEventNotAmpRequestMocked('text/html', '<body></body>');
+        $instance->onKernelResponse($event);
+
         $event = $this->getEventNotAmpRequestMocked('text/html', '');
         $instance->onKernelResponse($event);
     }
