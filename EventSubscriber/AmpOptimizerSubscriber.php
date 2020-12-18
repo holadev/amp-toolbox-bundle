@@ -7,6 +7,7 @@ use AmpProject\Optimizer\TransformationEngine;
 use Psr\Log\LoggerInterface;
 use Sunra\PhpSimple\HtmlDomParser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -78,7 +79,7 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if (!$this->isAmpHtml($event->getResponse())) {
+        if (!$this->isAmpHtml($event->getResponse(), $event->getRequest())) {
             return;
         }
 
@@ -94,10 +95,16 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
 
     /**
      * @param Response $response
+     * @param Request $request
      * @return bool
      */
-    private function isAmpHtml(Response $response): bool
+    private function isAmpHtml(Response $response, Request $request): bool
     {
+        $pathInfo = pathInfo($request->getUri());
+        if (isset($pathInfo['extension']) && $pathInfo['extension'] !== 'html') {
+            return false;
+        }
+
         $contentType = $response->headers->get('Content-type');
         if (strpos($contentType, 'text/html') === false) {
             return false;
@@ -105,6 +112,12 @@ class AmpOptimizerSubscriber implements EventSubscriberInterface
 
         $content = $response->getContent();
         $dom = HtmlDomParser::str_get_html($content);
+
+        if ($dom === false) {
+            $this->logger->error('Content can not be parsed by HtmlDomParser');
+            return false;
+        }
+
         $htmlElementAttrs = $dom->find('html', 0)->getAllAttributes();
         if (empty(array_intersect(['⚡', 'amp'], array_keys($htmlElementAttrs)))) {
             return false;
