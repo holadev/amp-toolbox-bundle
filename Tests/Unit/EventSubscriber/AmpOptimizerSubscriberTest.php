@@ -279,6 +279,16 @@ class AmpOptimizerSubscriberTest extends TestCase
     }
 
     /**
+     * Test isEnabled property
+     */
+    public function testIsEnabledProperty()
+    {
+        $instance = $this->getInstanceDisabledByProperty();
+        $instance->setEnabled(false);
+        $this->assertFalse($instance->isEnabled());
+    }
+
+    /**
      * Provide instance to test with disabled by property and test calls
      * @return AmpOptimizerSubscriber
      */
